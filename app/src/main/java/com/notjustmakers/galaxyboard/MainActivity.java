@@ -1,45 +1,29 @@
 package com.notjustmakers.galaxyboard;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.notjustmakers.galaxyboard.api.GalaxyBoardApi;
-import com.notjustmakers.galaxyboard.model.Color;
-import com.notjustmakers.galaxyboard.model.Status;
 
-import java.util.ArrayList;
+import java.util.Objects;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import petrov.kristiyan.colorpicker.ColorPicker;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    private static final Integer N_ROWS = 10;
-    private static final Integer N_COLUMNS = 5;
-
-    private ArrayList<String> ledColors;
-    private GalaxyBoardApi galaxyBoardApi;
+public class MainActivity extends AppCompatActivity implements
+    NavigationView.OnNavigationItemSelectedListener,
+    AddProblemFragment.OnFragmentInteractionListener,
+    ProblemsFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +50,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        createButtonMatrix();
-        initializeLedColors();
-        initializeApi();
+        //NOTE:  Open fragment1 initially.
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame, AddProblemFragment.newInstance(null, null));
+        ft.commit();
     }
 
     @Override
@@ -109,12 +94,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_problems) {
+        Fragment fragment = null;
 
+        if (id == R.id.nav_problems) {
+            fragment = ProblemsFragment.newInstance(null, null);
         } else if (id == R.id.nav_connection) {
 
         } else if (id == R.id.nav_board_settings) {
 
+        }
+
+        //NOTE: Fragment changing code
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame, fragment);
+            ft.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -122,78 +116,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void createButtonMatrix() {
-        TableLayout tableLayout = (TableLayout) findViewById(R.id.ledMatrix);
-
-        for (int i=0; i<N_ROWS; i++) {
-            TableRow tableRow = new TableRow(this);
-            tableLayout.addView(tableRow);
-            for (int j = 0; j < N_COLUMNS; j++) {
-                final int ledPosition = j % 2 == 0 ?
-                    ((N_ROWS - i - 1) + j * N_ROWS) :  (i + j * N_ROWS);
-                final Button button = new Button(this);
-                button.setText(String.valueOf(ledPosition));
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openColorPicker(ledPosition, button);
-                    }
-                });
-                tableRow.addView(button);
-            }
-        }
-    }
-
-    private void initializeLedColors() {
-        ledColors = new ArrayList<>();
-        ledColors.add("#ffffff"); // WHITE
-        ledColors.add("#c0c0c0"); // LIGHT GRAY
-        ledColors.add("#808080"); // GRAY
-        ledColors.add("#404040"); // DARK_GRAY
-        ledColors.add("#000000"); // BLACK
-        ledColors.add("#ff0000"); // RED
-        ledColors.add("#ffafaf"); // PINK
-        ledColors.add("#ffc800"); // ORANGE
-        ledColors.add("#ffff00"); // YELLOW
-        ledColors.add("#00ff00"); // GREEN
-        ledColors.add("#ff00ff"); // MAGENTA
-        ledColors.add("#00ffff"); // CYAN
-        ledColors.add("#0000ff"); // BLUE
-    }
-
-    private void initializeApi() {
-        galaxyBoardApi = new Retrofit.Builder()
-            .baseUrl("http://192.168.0.196")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(GalaxyBoardApi.class);
-    }
-
-    private void openColorPicker(final int ledPosition, final Button button) {
-        new ColorPicker(this)
-            .setColors(ledColors)
-            .setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
-                @Override
-                public void onChooseColor(int position, final int color) {
-                    galaxyBoardApi.setPixel(new Color(color), ledPosition).enqueue(new Callback<Status>() {
-                        @Override
-                        public void onResponse(Call<Status> call, Response<Status> response) {
-                            button.setBackgroundColor(color);
-                        }
-
-                        @Override
-                        public void onFailure(Call<Status> call, Throwable t) {
-                            Log.e("t: {}", t.getMessage(), t);
-                        }
-                    });
-                }
-
-                @Override
-                public void onCancel(){
-                    // put code
-                }
-            })
-            .setRoundColorButton(true)
-            .show();
+    @Override
+    public void onFragmentInteraction(String title) {
+        Objects.requireNonNull(getSupportActionBar()).setTitle(title);
     }
 }
