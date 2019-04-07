@@ -1,5 +1,7 @@
 package com.notjustmakers.galaxyboard;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -63,46 +66,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        TableLayout tableLayout = (TableLayout) findViewById(R.id.ledMatrix);
-
-        for (int i=0; i<N_ROWS; i++) {
-            TableRow tableRow = new TableRow(this);
-            tableLayout.addView(tableRow);
-            for (int j = 0; j < N_COLUMNS; j++) {
-                final int ledPosition = j % 2 == 0 ?
-                    ((N_ROWS - i - 1) + j * N_ROWS) :  (i + j * N_ROWS);
-                final Button button = new Button(this);
-                button.setText(String.valueOf(ledPosition));
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openColorPicker(ledPosition, button);
-                    }
-                });
-                tableRow.addView(button);
-            }
-        }
-
-        ledColors = new ArrayList<>();
-        ledColors.add("#ffffff"); // WHITE
-        ledColors.add("#c0c0c0"); // LIGHT GRAY
-        ledColors.add("#808080"); // GRAY
-        ledColors.add("#404040"); // DARK_GRAY
-        ledColors.add("#000000"); // BLACK
-        ledColors.add("#ff0000"); // RED
-        ledColors.add("#ffafaf"); // PINK
-        ledColors.add("#ffc800"); // ORANGE
-        ledColors.add("#ffff00"); // YELLOW
-        ledColors.add("#00ff00"); // GREEN
-        ledColors.add("#ff00ff"); // MAGENTA
-        ledColors.add("#00ffff"); // CYAN
-        ledColors.add("#0000ff"); // BLUE
-
-        galaxyBoardApi = new Retrofit.Builder()
-            .baseUrl("http://192.168.0.196")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(GalaxyBoardApi.class);
+        createButtonMatrix();
+        initializeLedColors();
+        initializeApi();
     }
 
     @Override
@@ -143,23 +109,64 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_problems) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_connection) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_board_settings) {
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void createButtonMatrix() {
+        TableLayout tableLayout = (TableLayout) findViewById(R.id.ledMatrix);
+
+        for (int i=0; i<N_ROWS; i++) {
+            TableRow tableRow = new TableRow(this);
+            tableLayout.addView(tableRow);
+            for (int j = 0; j < N_COLUMNS; j++) {
+                final int ledPosition = j % 2 == 0 ?
+                    ((N_ROWS - i - 1) + j * N_ROWS) :  (i + j * N_ROWS);
+                final Button button = new Button(this);
+                button.setText(String.valueOf(ledPosition));
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openColorPicker(ledPosition, button);
+                    }
+                });
+                tableRow.addView(button);
+            }
+        }
+    }
+
+    private void initializeLedColors() {
+        ledColors = new ArrayList<>();
+        ledColors.add("#ffffff"); // WHITE
+        ledColors.add("#c0c0c0"); // LIGHT GRAY
+        ledColors.add("#808080"); // GRAY
+        ledColors.add("#404040"); // DARK_GRAY
+        ledColors.add("#000000"); // BLACK
+        ledColors.add("#ff0000"); // RED
+        ledColors.add("#ffafaf"); // PINK
+        ledColors.add("#ffc800"); // ORANGE
+        ledColors.add("#ffff00"); // YELLOW
+        ledColors.add("#00ff00"); // GREEN
+        ledColors.add("#ff00ff"); // MAGENTA
+        ledColors.add("#00ffff"); // CYAN
+        ledColors.add("#0000ff"); // BLUE
+    }
+
+    private void initializeApi() {
+        galaxyBoardApi = new Retrofit.Builder()
+            .baseUrl("http://192.168.0.196")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(GalaxyBoardApi.class);
     }
 
     private void openColorPicker(final int ledPosition, final Button button) {
