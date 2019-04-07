@@ -65,8 +65,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         TableLayout tableLayout = (TableLayout) findViewById(R.id.ledMatrix);
 
-        int orientation = -1;
-
         for (int i=0; i<N_ROWS; i++) {
             TableRow tableRow = new TableRow(this);
             tableLayout.addView(tableRow);
@@ -83,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
                 tableRow.addView(button);
             }
-            orientation *= -1;
         }
 
         ledColors = new ArrayList<>();
