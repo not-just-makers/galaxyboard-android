@@ -7,12 +7,7 @@
 
     <TableLayout
         android:id="@+id/ledMatrix"
-        android:layout_width="395dp"
-        android:layout_height="659dp"
-        android:shrinkColumns="1"
-        android:stretchColumns="1"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
-    </TableLayout>
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="*"></TableLayout>
 </FrameLayout>

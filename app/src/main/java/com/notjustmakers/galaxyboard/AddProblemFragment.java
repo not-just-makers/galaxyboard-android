@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -25,6 +27,7 @@ import com.notjustmakers.galaxyboard.model.Color;
 import com.notjustmakers.galaxyboard.model.Status;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 /**
@@ -134,15 +137,18 @@ public class AddProblemFragment extends Fragment {
 
     private void createButtonMatrix(View view) {
         TableLayout tableLayout = (TableLayout) view.findViewById(R.id.ledMatrix);
+        tableLayout.setWeightSum(N_ROWS);
 
         for (int i=0; i<N_ROWS; i++) {
             TableRow tableRow = new TableRow(getContext());
+            tableRow.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 1));
+            tableRow.setWeightSum(N_COLUMNS);
             tableLayout.addView(tableRow);
             for (int j = 0; j < N_COLUMNS; j++) {
-                final int ledPosition = j % 2 == 0 ?
-                    ((N_ROWS - i - 1) + j * N_ROWS) :  (i + j * N_ROWS);
-                final Button button = new Button(getContext());
-                button.setText(String.valueOf(ledPosition));
+                final int ledPosition = j % 2 == 0 ? ((N_ROWS - i - 1) + j * N_ROWS) :  (i + j * N_ROWS);
+                final ImageView button = new ImageView(getContext());
+                button.setImageResource(getRandomWallGrip());
+                button.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1));
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -151,6 +157,22 @@ public class AddProblemFragment extends Fragment {
                 });
                 tableRow.addView(button);
             }
+        }
+    }
+
+    private int getRandomWallGrip() {
+        int i = new Random().nextInt(5);
+        switch (i) {
+            case 0:
+                return R.drawable.ic_wallgrip1;
+            case 1:
+                return R.drawable.ic_wallgrip2;
+            case 2:
+                return R.drawable.ic_wallgrip3;
+            case 3:
+                return R.drawable.ic_wallgrip4;
+            default:
+                return R.drawable.ic_wallgrip5;
         }
     }
 
@@ -179,7 +201,7 @@ public class AddProblemFragment extends Fragment {
             .create(GalaxyBoardApi.class);
     }
 
-    private void openColorPicker(final int ledPosition, final Button button) {
+    private void openColorPicker(final int ledPosition, final ImageView button) {
         new ColorPicker(getActivity())
             .setColors(ledColors)
             .setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
