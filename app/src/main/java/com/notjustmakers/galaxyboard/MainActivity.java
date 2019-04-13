@@ -5,6 +5,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.notjustmakers.galaxyboard.listener.OnFragmentInteractionListener;
 
 import java.util.Objects;
 
@@ -16,10 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity implements
-    NavigationView.OnNavigationItemSelectedListener,
-    AddProblemFragment.OnFragmentInteractionListener,
-    ProblemsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +35,8 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //NOTE:  Open fragment1 initially.
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame, AddProblemFragment.newInstance(null, null));
+        ft.replace(R.id.mainFrame, AddProblemFragment.newInstance());
         ft.commit();
     }
 
@@ -84,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements
         Fragment fragment = null;
 
         if (id == R.id.nav_problems) {
-            fragment = ProblemsFragment.newInstance(null, null);
+            fragment = ProblemsFragment.newInstance();
         } else if (id == R.id.nav_connection) {
 
         } else if (id == R.id.nav_board_settings) {
