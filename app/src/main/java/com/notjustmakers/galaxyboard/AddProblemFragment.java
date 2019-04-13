@@ -1,24 +1,12 @@
 package com.notjustmakers.galaxyboard;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import petrov.kristiyan.colorpicker.ColorPicker;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -27,7 +15,19 @@ import com.notjustmakers.galaxyboard.model.Color;
 import com.notjustmakers.galaxyboard.model.Status;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import petrov.kristiyan.colorpicker.ColorPicker;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -43,8 +43,12 @@ public class AddProblemFragment extends Fragment {
     private static final Integer N_ROWS = 10;
     private static final Integer N_COLUMNS = 5;
 
+    private ContextThemeWrapper DEFAULT_THEME_WRAPPER;
+
     private ArrayList<String> ledColors;
     private GalaxyBoardApi galaxyBoardApi;
+
+    private Map<String, ContextThemeWrapper> themeWrappersByColor;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -88,7 +92,7 @@ public class AddProblemFragment extends Fragment {
         }
 
         initializeApi();
-        initializeLedColors();
+        initializeColors();
     }
 
     @Override
@@ -146,13 +150,14 @@ public class AddProblemFragment extends Fragment {
             tableLayout.addView(tableRow);
             for (int j = 0; j < N_COLUMNS; j++) {
                 final int ledPosition = j % 2 == 0 ? ((N_ROWS - i - 1) + j * N_ROWS) :  (i + j * N_ROWS);
+                final int wallGripId = getRandomWallGrip();
                 final ImageView button = new ImageView(getContext());
-                button.setImageResource(getRandomWallGrip());
+                button.setImageDrawable(ResourcesCompat.getDrawable(getResources(), wallGripId, DEFAULT_THEME_WRAPPER.getTheme()));
                 button.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1));
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        openColorPicker(ledPosition, button);
+                        openColorPicker(ledPosition, button, wallGripId);
                     }
                 });
                 tableRow.addView(button);
@@ -176,21 +181,26 @@ public class AddProblemFragment extends Fragment {
         }
     }
 
-    private void initializeLedColors() {
+    private void initializeColors() {
+        // Default Theme
+        DEFAULT_THEME_WRAPPER = new ContextThemeWrapper(getContext(), R.style.WallGripTheme);
+
+        // Themes
+        themeWrappersByColor = new HashMap<>();
+        themeWrappersByColor.put("#000000", DEFAULT_THEME_WRAPPER);
+        themeWrappersByColor.put("#cf4647", new ContextThemeWrapper(getContext(), R.style.WallGripTheme_Red));
+        themeWrappersByColor.put("#fb6900", new ContextThemeWrapper(getContext(), R.style.WallGripTheme_Orange));
+        themeWrappersByColor.put("#00b9bd", new ContextThemeWrapper(getContext(), R.style.WallGripTheme_Cyan));
+        themeWrappersByColor.put("#f9d423", new ContextThemeWrapper(getContext(), R.style.WallGripTheme_Yellow));
+
+
+        // Led Colors
         ledColors = new ArrayList<>();
-        ledColors.add("#ffffff"); // WHITE
-        ledColors.add("#c0c0c0"); // LIGHT GRAY
-        ledColors.add("#808080"); // GRAY
-        ledColors.add("#404040"); // DARK_GRAY
         ledColors.add("#000000"); // BLACK
-        ledColors.add("#ff0000"); // RED
-        ledColors.add("#ffafaf"); // PINK
-        ledColors.add("#ffc800"); // ORANGE
-        ledColors.add("#ffff00"); // YELLOW
-        ledColors.add("#00ff00"); // GREEN
-        ledColors.add("#ff00ff"); // MAGENTA
-        ledColors.add("#00ffff"); // CYAN
-        ledColors.add("#0000ff"); // BLUE
+        ledColors.add("#cf4647"); // RED
+        ledColors.add("#fb6900"); // ORANGE
+        ledColors.add("#00b9bd"); // CYAN
+        ledColors.add("#f9d423"); // YELLOW
     }
 
     private void initializeApi() {
@@ -201,16 +211,18 @@ public class AddProblemFragment extends Fragment {
             .create(GalaxyBoardApi.class);
     }
 
-    private void openColorPicker(final int ledPosition, final ImageView button) {
+    private void openColorPicker(final int ledPosition, final ImageView button, final int wallGripId) {
         new ColorPicker(getActivity())
             .setColors(ledColors)
             .setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
                 @Override
-                public void onChooseColor(int position, final int color) {
-                    galaxyBoardApi.setPixel(new Color(color), ledPosition).enqueue(new Callback<Status>() {
+                public void onChooseColor(int position, final int _color) {
+                    final Color color = new Color(_color);
+                    button.setImageDrawable(ResourcesCompat.getDrawable(getResources(), wallGripId, themeWrappersByColor.get(color.getHex()).getTheme()));
+                    galaxyBoardApi.setPixel(color, ledPosition).enqueue(new Callback<Status>() {
                         @Override
                         public void onResponse(Call<Status> call, Response<Status> response) {
-                            button.setBackgroundColor(color);
+                            // TODO: Confirm color change
                         }
 
                         @Override

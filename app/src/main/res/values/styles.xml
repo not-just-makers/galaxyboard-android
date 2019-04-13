@@ -17,4 +17,24 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="WallGripTheme">
+        <item name="baseColor">#999999</item>
+    </style>
+
+    <style name="WallGripTheme.Red" parent="WallGripTheme">
+        <item name="baseColor">#CF4647</item>
+    </style>
+
+    <style name="WallGripTheme.Orange" parent="WallGripTheme">
+        <item name="baseColor">#FB6900</item>
+    </style>
+
+    <style name="WallGripTheme.Cyan" parent="WallGripTheme">
+        <item name="baseColor">#00B9BD</item>
+    </style>
+
+    <style name="WallGripTheme.Yellow" parent="WallGripTheme">
+        <item name="baseColor">#F9D423</item>
+    </style>
+
 </resources>

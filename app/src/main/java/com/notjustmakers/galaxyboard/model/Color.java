@@ -29,4 +29,8 @@ public class Color {
     public int getBlue() {
         return blue;
     }
+
+    public String getHex() {
+        return String.format("#%02x%02x%02x", red, green, blue);
+    }
 }
