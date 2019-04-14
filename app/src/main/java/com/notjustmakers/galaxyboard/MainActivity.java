@@ -5,7 +5,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
-import com.notjustmakers.galaxyboard.listener.OnFragmentInteractionListener;
+import com.notjustmakers.galaxyboard.ui.common.OnFragmentInteractionListener;
+import com.notjustmakers.galaxyboard.ui.problems.AddProblemFragment;
+import com.notjustmakers.galaxyboard.ui.problems.OnProblemInteractionListener;
+import com.notjustmakers.galaxyboard.ui.problems.ProblemListFragment;
 
 import java.util.Objects;
 
@@ -17,7 +20,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+    OnFragmentInteractionListener,
+    OnProblemInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment fragment = null;
 
         if (id == R.id.nav_problems) {
-            fragment = ProblemsFragment.newInstance();
+            fragment = new ProblemListFragment();
         } else if (id == R.id.nav_connection) {
 
         } else if (id == R.id.nav_board_settings) {
@@ -101,7 +106,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onFragmentInteraction(String title) {
+    public void onTitleChange(String title) {
         Objects.requireNonNull(getSupportActionBar()).setTitle(title);
+    }
+
+    @Override
+    public void onProblemChange(int problemId) {
+
     }
 }

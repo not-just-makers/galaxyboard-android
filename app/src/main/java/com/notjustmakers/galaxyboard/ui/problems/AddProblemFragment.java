@@ -1,4 +1,4 @@
-package com.notjustmakers.galaxyboard;
+package com.notjustmakers.galaxyboard.ui.problems;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,8 +10,9 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import com.notjustmakers.galaxyboard.R;
 import com.notjustmakers.galaxyboard.api.GalaxyBoardApi;
-import com.notjustmakers.galaxyboard.listener.OnFragmentInteractionListener;
+import com.notjustmakers.galaxyboard.ui.common.OnFragmentInteractionListener;
 import com.notjustmakers.galaxyboard.model.Color;
 import com.notjustmakers.galaxyboard.model.Status;
 
@@ -29,7 +30,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 
 /**
  * Add problem fragment.
@@ -65,7 +65,7 @@ public class AddProblemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mListener != null) {
-            mListener.onFragmentInteraction("Add Problem");
+            mListener.onTitleChange("Add Problem");
         }
 
         View view = inflater.inflate(R.layout.fragment_add_problem, container, false);
