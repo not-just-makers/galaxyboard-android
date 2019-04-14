@@ -7,8 +7,10 @@ import android.view.MenuItem;
 import com.google.android.material.navigation.NavigationView;
 import com.notjustmakers.galaxyboard.api.DemoGalaxyBoardApi;
 import com.notjustmakers.galaxyboard.api.GalaxyBoardApi;
+import com.notjustmakers.galaxyboard.model.Problem;
 import com.notjustmakers.galaxyboard.ui.common.OnFragmentInteractionListener;
 import com.notjustmakers.galaxyboard.ui.problems.AddProblemFragment;
+import com.notjustmakers.galaxyboard.ui.problems.DisplayProblemFragment;
 import com.notjustmakers.galaxyboard.ui.problems.OnProblemInteractionListener;
 import com.notjustmakers.galaxyboard.ui.problems.ProblemListFragment;
 
@@ -127,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onProblemChange(int problemId) {
-        changeFragment(AddProblemFragment.newInstance(galaxyBoardApi));
+    public void onProblemChange(Problem problem) {
+        changeFragment(DisplayProblemFragment.newInstance(problem));
     }
 }

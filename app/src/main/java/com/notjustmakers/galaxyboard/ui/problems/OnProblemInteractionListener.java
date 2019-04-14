@@ -1,5 +1,7 @@
 package com.notjustmakers.galaxyboard.ui.problems;
 
+import com.notjustmakers.galaxyboard.model.Problem;
+
 /**
  * Used to notify when a problem has been changed.
  *
@@ -11,8 +13,8 @@ public interface OnProblemInteractionListener {
      * A problem has been changed. This method will trigger all the UI changes
      * required to display the new one.
      *
-     * @param problemId Problem identifier in the API.
+     * @param problem Problem
      */
-    void onProblemChange(int problemId);
+    void onProblemChange(Problem problem);
 
 }

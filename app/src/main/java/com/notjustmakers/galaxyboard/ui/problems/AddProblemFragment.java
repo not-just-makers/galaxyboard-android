@@ -9,8 +9,8 @@ import android.widget.FrameLayout;
 
 import com.notjustmakers.galaxyboard.R;
 import com.notjustmakers.galaxyboard.api.GalaxyBoardApi;
+import com.notjustmakers.galaxyboard.model.Board;
 import com.notjustmakers.galaxyboard.model.ClimbingWallMatrix;
-import com.notjustmakers.galaxyboard.model.Problem;
 import com.notjustmakers.galaxyboard.ui.common.OnFragmentInteractionListener;
 
 import androidx.fragment.app.Fragment;
@@ -56,21 +56,21 @@ public class AddProblemFragment extends Fragment {
         }
 
         // Get problem and create view
-        galaxyBoardApi.getProblem(1).enqueue(new Callback<Problem>() {
+        galaxyBoardApi.getBoard().enqueue(new Callback<Board>() {
             @Override
-            public void onResponse(Call<Problem> call, Response<Problem> response) {
+            public void onResponse(Call<Board> call, Response<Board> response) {
                 // Create climbing wall matrix
-                Problem problem = response.body();
-                climbingWallMatrix = new ClimbingWallMatrix(problem.getRows(), problem.getColumns(), problem.getClimbingHolds());
+                Board board = response.body();
+                climbingWallMatrix = new ClimbingWallMatrix(board.getRows(), board.getColumns(), board.getClimbingHolds());
 
                 // Create climbing wall matrix view
                 FrameLayout addProblemFrame = view.findViewById(R.id.addProblemFrame);
-                ClimbingWallMatrixView climbingWallMatrixView = new ClimbingWallMatrixView(getContext(), getActivity(), climbingWallMatrix);
+                ClimbingWallMatrixView climbingWallMatrixView = new ClimbingWallMatrixView(getContext(), getActivity(), climbingWallMatrix, true);
                 addProblemFrame.addView(climbingWallMatrixView);
             }
 
             @Override
-            public void onFailure(Call<Problem> call, Throwable t) {
+            public void onFailure(Call<Board> call, Throwable t) {
 
             }
         });

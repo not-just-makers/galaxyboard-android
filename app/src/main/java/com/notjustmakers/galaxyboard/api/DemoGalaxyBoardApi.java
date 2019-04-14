@@ -1,5 +1,6 @@
 package com.notjustmakers.galaxyboard.api;
 
+import com.notjustmakers.galaxyboard.model.Board;
 import com.notjustmakers.galaxyboard.model.ClimbingHold;
 import com.notjustmakers.galaxyboard.model.Color;
 import com.notjustmakers.galaxyboard.model.Pixel;
@@ -20,8 +21,10 @@ public class DemoGalaxyBoardApi implements GalaxyBoardApi {
     private static final Integer N_COLUMNS = 5;
 
     private List<Problem> problems;
+    private Board board;
 
     public DemoGalaxyBoardApi() {
+        board = createRandomBoard();
         problems = new ArrayList<>();
         for (int i = 0; i < N_ROWS * N_COLUMNS; i++) {
             problems.add(createRandomProblem(i));
@@ -48,10 +51,25 @@ public class DemoGalaxyBoardApi implements GalaxyBoardApi {
         return new ValueCall<>(problems);
     }
 
-    private Problem createRandomProblem(int problemId) {
+    @Override
+    public Call<Board> getBoard() {
+        return new ValueCall<>(board);
+    }
+
+    private Board createRandomBoard() {
         ClimbingHold[] climbingHolds = new ClimbingHold[N_ROWS * N_COLUMNS];
         for (int i = 0; i < N_ROWS * N_COLUMNS; i++) {
-            climbingHolds[i] = new ClimbingHold(i, new Color(0, 0, 0), new Random().nextInt(5));
+            int type = new Random().nextInt(5);
+            climbingHolds[i] = new ClimbingHold(i, Color.BLACK, type);
+        }
+        return new Board(N_ROWS, N_COLUMNS, climbingHolds);
+    }
+
+    private Problem createRandomProblem(int problemId) {
+        ClimbingHold[] climbingHolds = new ClimbingHold[board.getClimbingHolds().length];
+        for (int i=0; i<climbingHolds.length; i++) {
+            climbingHolds[i] = (ClimbingHold) board.getClimbingHolds()[i].clone();
+            climbingHolds[i].setColor(Color.ALL.get(new Random().nextInt(Color.ALL.size())));
         }
         return new Problem(problemId, N_ROWS, N_COLUMNS, "My Problem " + problemId, getRandomDifficulty(), climbingHolds);
     }

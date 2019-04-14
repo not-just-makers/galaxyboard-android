@@ -40,7 +40,7 @@ public class ProblemItemRecyclerViewAdapter extends RecyclerView.Adapter<Problem
             @Override
             public void onClick(View v) {
                 if (null != onProblemInteractionListener) {
-                    onProblemInteractionListener.onProblemChange(holder.mItem.getId());
+                    onProblemInteractionListener.onProblemChange(holder.mItem);
                 }
             }
         });

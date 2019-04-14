@@ -1,5 +1,6 @@
 package com.notjustmakers.galaxyboard.api;
 
+import com.notjustmakers.galaxyboard.model.Board;
 import com.notjustmakers.galaxyboard.model.Color;
 import com.notjustmakers.galaxyboard.model.Pixel;
 import com.notjustmakers.galaxyboard.model.Problem;
@@ -25,4 +26,7 @@ public interface GalaxyBoardApi {
 
     @GET("v1/problems")
     Call<List<Problem>> getProblems();
+
+    @GET("v1/board")
+    Call<Board> getBoard();
 }

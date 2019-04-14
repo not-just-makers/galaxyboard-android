@@ -26,24 +26,27 @@ public class ClimbingWallMatrixView extends TableLayout {
     private final Context context;
     private final Activity activity;
     private final ClimbingWallMatrix climbingWallMatrix;
+    private final boolean editable;
 
     private ContextThemeWrapper defaultThemeWrapper;
     private ArrayList<String> ledColors;
     private Map<String, ContextThemeWrapper> themeWrappersByColor;
 
-    public ClimbingWallMatrixView(Context context, Activity activity, ClimbingWallMatrix climbingWallMatrix) {
+    public ClimbingWallMatrixView(Context context, Activity activity, ClimbingWallMatrix climbingWallMatrix, boolean editable) {
         super(context);
         this.context = context;
         this.activity = activity;
         this.climbingWallMatrix = climbingWallMatrix;
+        this.editable = editable;
         init();
     }
 
-    public ClimbingWallMatrixView(Context context, AttributeSet attrs, Activity activity, ClimbingWallMatrix climbingWallMatrix) {
+    public ClimbingWallMatrixView(Context context, AttributeSet attrs, Activity activity, ClimbingWallMatrix climbingWallMatrix, boolean editable) {
         super(context, attrs);
         this.context = context;
         this.activity = activity;
         this.climbingWallMatrix = climbingWallMatrix;
+        this.editable = editable;
         init();
     }
 
@@ -53,20 +56,19 @@ public class ClimbingWallMatrixView extends TableLayout {
 
         // Themes
         themeWrappersByColor = new HashMap<>();
-        themeWrappersByColor.put("#000000", defaultThemeWrapper);
-        themeWrappersByColor.put("#cf4647", new ContextThemeWrapper(context, R.style.WallGripTheme_Red));
-        themeWrappersByColor.put("#fb6900", new ContextThemeWrapper(context, R.style.WallGripTheme_Orange));
-        themeWrappersByColor.put("#00b9bd", new ContextThemeWrapper(context, R.style.WallGripTheme_Cyan));
-        themeWrappersByColor.put("#f9d423", new ContextThemeWrapper(context, R.style.WallGripTheme_Yellow));
-
+        themeWrappersByColor.put(Color.BLACK.getHex(), defaultThemeWrapper);
+        themeWrappersByColor.put(Color.RED.getHex(), new ContextThemeWrapper(context, R.style.WallGripTheme_Red));
+        themeWrappersByColor.put(Color.ORANGE.getHex(), new ContextThemeWrapper(context, R.style.WallGripTheme_Orange));
+        themeWrappersByColor.put(Color.CYAN.getHex(), new ContextThemeWrapper(context, R.style.WallGripTheme_Cyan));
+        themeWrappersByColor.put(Color.YELLOW.getHex(), new ContextThemeWrapper(context, R.style.WallGripTheme_Yellow));
 
         // Led Colors
         ledColors = new ArrayList<>();
-        ledColors.add("#000000"); // BLACK
-        ledColors.add("#cf4647"); // RED
-        ledColors.add("#fb6900"); // ORANGE
-        ledColors.add("#00b9bd"); // CYAN
-        ledColors.add("#f9d423"); // YELLOW
+        ledColors.add(Color.BLACK.getHex());
+        ledColors.add(Color.RED.getHex());
+        ledColors.add(Color.ORANGE.getHex());
+        ledColors.add(Color.CYAN.getHex());
+        ledColors.add(Color.YELLOW.getHex());
 
         // Adjust weight to evenly distribute height
         setWeightSum(climbingWallMatrix.getRows());
@@ -99,42 +101,44 @@ public class ClimbingWallMatrixView extends TableLayout {
                 climbingHoldImg.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1));
 
                 // Add on-click action
-                climbingHoldImg.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new ColorPicker(activity)
-                            .setColors(ledColors)
-                            .setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
-                                @Override
-                                public void onChooseColor(int position, final int _color) {
-                                    final Color color = new Color(_color);
-                                    climbingHoldImg.setImageDrawable(ResourcesCompat.getDrawable(
-                                        getResources(),
-                                        getClimbingHoldImageByType(climbingHold.getType()),
-                                        themeWrappersByColor.get(color.getHex()).getTheme())
-                                    );
-                                    /*galaxyBoardApi.setPixel(color, ledPosition).enqueue(new Callback<Status>() {
-                                        @Override
-                                        public void onResponse(Call<Status> call, Response<Status> response) {
-                                            // TODO: Confirm color change
-                                        }
+                if (editable) {
+                    climbingHoldImg.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new ColorPicker(activity)
+                                .setColors(ledColors)
+                                .setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
+                                    @Override
+                                    public void onChooseColor(int position, final int _color) {
+                                        final Color color = new Color(_color);
+                                        climbingHoldImg.setImageDrawable(ResourcesCompat.getDrawable(
+                                            getResources(),
+                                            getClimbingHoldImageByType(climbingHold.getType()),
+                                            themeWrappersByColor.get(color.getHex()).getTheme())
+                                        );
+                                        /*galaxyBoardApi.setPixel(color, ledPosition).enqueue(new Callback<Status>() {
+                                            @Override
+                                            public void onResponse(Call<Status> call, Response<Status> response) {
+                                                // TODO: Confirm color change
+                                            }
 
-                                        @Override
-                                        public void onFailure(Call<Status> call, Throwable t) {
-                                            Log.e("t: {}", t.getMessage(), t);
-                                        }
-                                    });*/
-                                }
+                                            @Override
+                                            public void onFailure(Call<Status> call, Throwable t) {
+                                                Log.e("t: {}", t.getMessage(), t);
+                                            }
+                                        });*/
+                                    }
 
-                                @Override
-                                public void onCancel() {
-                                    // put code
-                                }
-                            })
-                            .setRoundColorButton(true)
-                            .show();
-                    }
-                });
+                                    @Override
+                                    public void onCancel() {
+                                        // put code
+                                    }
+                                })
+                                .setRoundColorButton(true)
+                                .show();
+                        }
+                    });
+                }
 
                 // Add climbing hold to row
                 tableRow.addView(climbingHoldImg);

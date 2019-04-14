@@ -22,17 +22,34 @@ public class ClimbingHold implements Comparable {
         return position;
     }
 
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
     public Color getColor() {
         return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public int getType() {
         return type;
     }
 
+    public void setType(int type) {
+        this.type = type;
+    }
+
     @Override
     public int compareTo(Object o) {
         ClimbingHold c = (ClimbingHold) o;
         return Integer.compare(position, c.getPosition());
+    }
+
+    @Override
+    public Object clone() {
+        return new ClimbingHold(position, color, type);
     }
 }
