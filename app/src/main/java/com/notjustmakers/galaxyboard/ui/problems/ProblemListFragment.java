@@ -54,7 +54,6 @@ public class ProblemListFragment extends Fragment {
         return view;
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

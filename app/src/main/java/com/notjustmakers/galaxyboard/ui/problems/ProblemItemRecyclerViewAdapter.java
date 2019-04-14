@@ -1,7 +1,5 @@
 package com.notjustmakers.galaxyboard.ui.problems;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +10,8 @@ import com.notjustmakers.galaxyboard.ui.common.OnFragmentInteractionListener;
 import com.notjustmakers.galaxyboard.ui.problems.dummy.DummyContent.DummyItem;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ProblemItemRecyclerViewAdapter extends RecyclerView.Adapter<ProblemItemRecyclerViewAdapter.ViewHolder> {
 
