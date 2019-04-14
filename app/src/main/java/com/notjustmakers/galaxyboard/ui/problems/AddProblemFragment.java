@@ -53,6 +53,7 @@ public class AddProblemFragment extends Fragment {
         // Update title
         if (onFragmentInteractionListener != null) {
             onFragmentInteractionListener.onTitleChange("Add Problem");
+            onFragmentInteractionListener.onFloatingActionButtonChange(false);
         }
 
         // Get problem and create view

@@ -45,6 +45,7 @@ public class DisplayProblemFragment extends Fragment {
         // Update title
         if (onFragmentInteractionListener != null) {
             onFragmentInteractionListener.onTitleChange("Problem " + problem.getId());
+            onFragmentInteractionListener.onFloatingActionButtonChange(false);
         }
 
         // Create climbing wall matrix

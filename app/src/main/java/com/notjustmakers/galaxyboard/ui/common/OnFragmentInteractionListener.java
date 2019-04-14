@@ -14,4 +14,11 @@ public interface OnFragmentInteractionListener {
      */
     void onTitleChange(String title);
 
+    /**
+     * Called when a fragment wants to show/hide the floating action button.
+     *
+     * @param visible true, if visible; false, if invisible
+     */
+    void onFloatingActionButtonChange(boolean visible);
+
 }

@@ -78,6 +78,7 @@ public class ProblemListFragment extends Fragment {
         // Update title
         if (onFragmentInteractionListener != null) {
             onFragmentInteractionListener.onTitleChange("Problems");
+            onFragmentInteractionListener.onFloatingActionButtonChange(true);
         }
 
         return view;

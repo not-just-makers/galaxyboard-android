@@ -3,7 +3,9 @@ package com.notjustmakers.galaxyboard;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.notjustmakers.galaxyboard.api.DemoGalaxyBoardApi;
 import com.notjustmakers.galaxyboard.api.GalaxyBoardApi;
@@ -13,8 +15,6 @@ import com.notjustmakers.galaxyboard.ui.problems.AddProblemFragment;
 import com.notjustmakers.galaxyboard.ui.problems.DisplayProblemFragment;
 import com.notjustmakers.galaxyboard.ui.problems.OnProblemInteractionListener;
 import com.notjustmakers.galaxyboard.ui.problems.ProblemListFragment;
-
-import java.util.Objects;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,6 +46,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Add on-click to floating action button
+        findViewById(R.id.floatingActionButton).setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    changeFragment(AddProblemFragment.newInstance(galaxyBoardApi));
+                }
+            }
+        );
+
         /*galaxyBoardApi = new Retrofit.Builder()
             .baseUrl("http://192.168.0.196")
             .addConverterFactory(GsonConverterFactory.create())
@@ -54,9 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         galaxyBoardApi = new DemoGalaxyBoardApi();
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame, ProblemListFragment.newInstance(galaxyBoardApi));
-        ft.commit();
+        changeFragment(ProblemListFragment.newInstance(galaxyBoardApi));
     }
 
     @Override
@@ -125,7 +133,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onTitleChange(String title) {
-        Objects.requireNonNull(getSupportActionBar()).setTitle(title);
+        getSupportActionBar().setTitle(title);
+    }
+
+    @Override
+    public void onFloatingActionButtonChange(boolean visible) {
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
+        if (visible) { floatingActionButton.show(); }
+        else { floatingActionButton.hide(); }
     }
 
     @Override
