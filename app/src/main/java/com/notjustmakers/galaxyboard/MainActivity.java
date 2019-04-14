@@ -5,8 +5,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.notjustmakers.galaxyboard.api.DemoGalaxyBoardApi;
+import com.notjustmakers.galaxyboard.api.GalaxyBoardApi;
 import com.notjustmakers.galaxyboard.ui.common.OnFragmentInteractionListener;
-import com.notjustmakers.galaxyboard.ui.problems.AddProblemFragment;
 import com.notjustmakers.galaxyboard.ui.problems.OnProblemInteractionListener;
 import com.notjustmakers.galaxyboard.ui.problems.ProblemListFragment;
 
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     OnFragmentInteractionListener,
     OnProblemInteractionListener {
 
+    private GalaxyBoardApi galaxyBoardApi;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +43,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        /*galaxyBoardApi = new Retrofit.Builder()
+            .baseUrl("http://192.168.0.196")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(GalaxyBoardApi.class);*/
+
+        galaxyBoardApi = new DemoGalaxyBoardApi();
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame, AddProblemFragment.newInstance());
+        ft.replace(R.id.mainFrame, ProblemListFragment.newInstance(galaxyBoardApi));
         ft.commit();
     }
 
@@ -86,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment fragment = null;
 
         if (id == R.id.nav_problems) {
-            fragment = new ProblemListFragment();
+            fragment = ProblemListFragment.newInstance(galaxyBoardApi);
         } else if (id == R.id.nav_connection) {
 
         } else if (id == R.id.nav_board_settings) {

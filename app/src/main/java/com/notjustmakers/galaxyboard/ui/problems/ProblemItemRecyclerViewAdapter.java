@@ -6,20 +6,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.notjustmakers.galaxyboard.R;
+import com.notjustmakers.galaxyboard.model.Problem;
 import com.notjustmakers.galaxyboard.ui.common.OnFragmentInteractionListener;
-import com.notjustmakers.galaxyboard.ui.problems.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ProblemItemRecyclerViewAdapter extends RecyclerView.Adapter<ProblemItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Problem> mValues;
     private final OnFragmentInteractionListener mListener;
 
-    public ProblemItemRecyclerViewAdapter(List<DummyItem> items, OnFragmentInteractionListener listener) {
-        mValues = items;
+    public ProblemItemRecyclerViewAdapter(OnFragmentInteractionListener listener) {
+        mValues = new ArrayList<>();
         mListener = listener;
     }
 
@@ -33,8 +34,8 @@ public class ProblemItemRecyclerViewAdapter extends RecyclerView.Adapter<Problem
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(mValues.get(position).getName());
+        holder.mContentView.setText(mValues.get(position).getDifficulty());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +49,10 @@ public class ProblemItemRecyclerViewAdapter extends RecyclerView.Adapter<Problem
         });
     }
 
+    public List<Problem> getProblems() {
+        return mValues;
+    }
+
     @Override
     public int getItemCount() {
         return mValues.size();
@@ -57,7 +62,7 @@ public class ProblemItemRecyclerViewAdapter extends RecyclerView.Adapter<Problem
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public Problem mItem;
 
         public ViewHolder(View view) {
             super(view);

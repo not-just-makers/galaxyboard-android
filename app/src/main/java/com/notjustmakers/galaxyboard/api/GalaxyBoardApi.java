@@ -22,4 +22,7 @@ public interface GalaxyBoardApi {
 
     @GET("v1/problem/{problemId}")
     Call<Problem> getProblem(@Path("problemId") int problemId);
+
+    @GET("v1/problems")
+    Call<List<Problem>> getProblems();
 }

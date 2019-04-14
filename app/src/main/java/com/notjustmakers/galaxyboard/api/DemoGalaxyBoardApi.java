@@ -5,6 +5,7 @@ import com.notjustmakers.galaxyboard.model.Color;
 import com.notjustmakers.galaxyboard.model.Pixel;
 import com.notjustmakers.galaxyboard.model.Problem;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -18,6 +19,15 @@ public class DemoGalaxyBoardApi implements GalaxyBoardApi {
     private static final Integer N_ROWS = 10;
     private static final Integer N_COLUMNS = 5;
 
+    private List<Problem> problems;
+
+    public DemoGalaxyBoardApi() {
+        problems = new ArrayList<>();
+        for (int i = 0; i < N_ROWS * N_COLUMNS; i++) {
+            problems.add(createRandomProblem(i));
+        }
+    }
+
     @Override
     public Call<Status> setPixels(List<Pixel> pixels) {
         return new ValueCall<>(Status.OK);
@@ -30,11 +40,50 @@ public class DemoGalaxyBoardApi implements GalaxyBoardApi {
 
     @Override
     public Call<Problem> getProblem(int problemId) {
+        return new ValueCall<>(problems.get(problemId));
+    }
+
+    @Override
+    public Call<List<Problem>> getProblems() {
+        return new ValueCall<>(problems);
+    }
+
+    private Problem createRandomProblem(int problemId) {
         ClimbingHold[] climbingHolds = new ClimbingHold[N_ROWS * N_COLUMNS];
         for (int i = 0; i < N_ROWS * N_COLUMNS; i++) {
             climbingHolds[i] = new ClimbingHold(i, new Color(0, 0, 0), new Random().nextInt(5));
         }
-        return new ValueCall<>(new Problem(N_ROWS, N_COLUMNS, "My Problem " + problemId, "7A", climbingHolds));
+        return new Problem(N_ROWS, N_COLUMNS, "My Problem " + problemId, getRandomDifficulty(), climbingHolds);
+    }
+
+    private String getRandomDifficulty() {
+        int i = new Random().nextInt(12);
+        switch (i) {
+            case 0:
+                return "6A";
+            case 1:
+                return "6A+";
+            case 2:
+                return "6B";
+            case 3:
+                return "6B+";
+            case 4:
+                return "6C";
+            case 5:
+                return "6C+";
+            case 6:
+                return "7A";
+            case 7:
+                return "7A+";
+            case 8:
+                return "7B";
+            case 9:
+                return "7B+";
+            case 10:
+                return "7C";
+            default:
+                return "7C+";
+        }
     }
 
     private class ValueCall<T> implements Call<T> {

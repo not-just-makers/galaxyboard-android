@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.notjustmakers.galaxyboard.R;
-import com.notjustmakers.galaxyboard.api.DemoGalaxyBoardApi;
 import com.notjustmakers.galaxyboard.api.GalaxyBoardApi;
 import com.notjustmakers.galaxyboard.model.ClimbingWallMatrix;
 import com.notjustmakers.galaxyboard.model.Problem;
@@ -35,21 +34,15 @@ public class AddProblemFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static AddProblemFragment newInstance() {
-        return new AddProblemFragment();
+    public static AddProblemFragment newInstance(GalaxyBoardApi galaxyBoardApi) {
+        AddProblemFragment addProblemFragment = new AddProblemFragment();
+        addProblemFragment.galaxyBoardApi = galaxyBoardApi;
+        return addProblemFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /*galaxyBoardApi = new Retrofit.Builder()
-            .baseUrl("http://192.168.0.196")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(GalaxyBoardApi.class);*/
-
-        galaxyBoardApi = new DemoGalaxyBoardApi();
     }
 
     @Override

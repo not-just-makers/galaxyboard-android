@@ -7,12 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.notjustmakers.galaxyboard.R;
+import com.notjustmakers.galaxyboard.api.GalaxyBoardApi;
+import com.notjustmakers.galaxyboard.model.Problem;
 import com.notjustmakers.galaxyboard.ui.common.OnFragmentInteractionListener;
-import com.notjustmakers.galaxyboard.ui.problems.dummy.DummyContent;
+
+import java.util.List;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A fragment representing a list of Items.
@@ -21,11 +27,19 @@ public class ProblemListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private GalaxyBoardApi galaxyBoardApi;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public ProblemListFragment() {
+    }
+
+    public static ProblemListFragment newInstance(GalaxyBoardApi galaxyBoardApi) {
+        ProblemListFragment problemListFragment = new ProblemListFragment();
+        problemListFragment.galaxyBoardApi = galaxyBoardApi;
+        return problemListFragment;
     }
 
     @Override
@@ -43,7 +57,21 @@ public class ProblemListFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new ProblemItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            final ProblemItemRecyclerViewAdapter viewAdapter = new ProblemItemRecyclerViewAdapter(mListener);
+            recyclerView.setAdapter(viewAdapter);
+
+            // Get problems from API
+            galaxyBoardApi.getProblems().enqueue(new Callback<List<Problem>>() {
+                @Override
+                public void onResponse(Call<List<Problem>> call, Response<List<Problem>> response) {
+                    viewAdapter.getProblems().addAll(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<List<Problem>> call, Throwable t) {
+
+                }
+            });
         }
 
         // Update title
