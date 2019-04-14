@@ -53,7 +53,7 @@ public class DemoGalaxyBoardApi implements GalaxyBoardApi {
         for (int i = 0; i < N_ROWS * N_COLUMNS; i++) {
             climbingHolds[i] = new ClimbingHold(i, new Color(0, 0, 0), new Random().nextInt(5));
         }
-        return new Problem(N_ROWS, N_COLUMNS, "My Problem " + problemId, getRandomDifficulty(), climbingHolds);
+        return new Problem(problemId, N_ROWS, N_COLUMNS, "My Problem " + problemId, getRandomDifficulty(), climbingHolds);
     }
 
     private String getRandomDifficulty() {

@@ -8,6 +8,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.notjustmakers.galaxyboard.api.DemoGalaxyBoardApi;
 import com.notjustmakers.galaxyboard.api.GalaxyBoardApi;
 import com.notjustmakers.galaxyboard.ui.common.OnFragmentInteractionListener;
+import com.notjustmakers.galaxyboard.ui.problems.AddProblemFragment;
 import com.notjustmakers.galaxyboard.ui.problems.OnProblemInteractionListener;
 import com.notjustmakers.galaxyboard.ui.problems.ProblemListFragment;
 
@@ -104,7 +105,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
 
-        //NOTE: Fragment changing code
+        changeFragment(fragment);
+
+        return true;
+    }
+
+    private void changeFragment(Fragment fragment) {
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, fragment);
@@ -113,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     @Override
@@ -123,6 +128,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onProblemChange(int problemId) {
-
+        changeFragment(AddProblemFragment.newInstance(galaxyBoardApi));
     }
 }

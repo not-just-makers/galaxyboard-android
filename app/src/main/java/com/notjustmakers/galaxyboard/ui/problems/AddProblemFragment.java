@@ -25,7 +25,8 @@ import retrofit2.Response;
  */
 public class AddProblemFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener onFragmentInteractionListener;
+    private OnProblemInteractionListener onProblemInteractionListener;
 
     private ClimbingWallMatrix climbingWallMatrix;
     private GalaxyBoardApi galaxyBoardApi;
@@ -50,8 +51,8 @@ public class AddProblemFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_add_problem, container, false);
 
         // Update title
-        if (mListener != null) {
-            mListener.onTitleChange("Add Problem");
+        if (onFragmentInteractionListener != null) {
+            onFragmentInteractionListener.onTitleChange("Add Problem");
         }
 
         // Get problem and create view
@@ -80,17 +81,23 @@ public class AddProblemFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
+        if (context instanceof OnFragmentInteractionListener || context instanceof OnProblemInteractionListener) {
+            if (context instanceof OnFragmentInteractionListener) {
+                onFragmentInteractionListener = (OnFragmentInteractionListener) context;
+            }
+            if (context instanceof OnProblemInteractionListener) {
+                onProblemInteractionListener = (OnProblemInteractionListener) context;
+            }
+        } else  {
             throw new RuntimeException(context.toString()
-                + " must implement OnFragmentInteractionListener");
+                + " must implement OnFragmentInteractionListener and OnProblemInteractionListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        onFragmentInteractionListener = null;
+        onProblemInteractionListener = null;
     }
 }

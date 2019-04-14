@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.notjustmakers.galaxyboard.R;
 import com.notjustmakers.galaxyboard.model.Problem;
-import com.notjustmakers.galaxyboard.ui.common.OnFragmentInteractionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ProblemItemRecyclerViewAdapter extends RecyclerView.Adapter<ProblemItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<Problem> mValues;
-    private final OnFragmentInteractionListener mListener;
+    private final OnProblemInteractionListener onProblemInteractionListener;
 
-    public ProblemItemRecyclerViewAdapter(OnFragmentInteractionListener listener) {
+    public ProblemItemRecyclerViewAdapter(OnProblemInteractionListener listener) {
         mValues = new ArrayList<>();
-        mListener = listener;
+        onProblemInteractionListener = listener;
     }
 
     @Override
@@ -40,10 +39,8 @@ public class ProblemItemRecyclerViewAdapter extends RecyclerView.Adapter<Problem
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onTitleChange(holder.mItem.toString());
+                if (null != onProblemInteractionListener) {
+                    onProblemInteractionListener.onProblemChange(holder.mItem.getId());
                 }
             }
         });

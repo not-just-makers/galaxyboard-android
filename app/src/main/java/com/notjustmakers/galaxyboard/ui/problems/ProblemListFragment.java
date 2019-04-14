@@ -25,7 +25,8 @@ import retrofit2.Response;
  */
 public class ProblemListFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener onFragmentInteractionListener;
+    private OnProblemInteractionListener onProblemInteractionListener;
 
     private GalaxyBoardApi galaxyBoardApi;
 
@@ -57,7 +58,7 @@ public class ProblemListFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            final ProblemItemRecyclerViewAdapter viewAdapter = new ProblemItemRecyclerViewAdapter(mListener);
+            final ProblemItemRecyclerViewAdapter viewAdapter = new ProblemItemRecyclerViewAdapter(onProblemInteractionListener);
             recyclerView.setAdapter(viewAdapter);
 
             // Get problems from API
@@ -75,8 +76,8 @@ public class ProblemListFragment extends Fragment {
         }
 
         // Update title
-        if (mListener != null) {
-            mListener.onTitleChange("Problems");
+        if (onFragmentInteractionListener != null) {
+            onFragmentInteractionListener.onTitleChange("Problems");
         }
 
         return view;
@@ -85,17 +86,23 @@ public class ProblemListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
+        if (context instanceof OnFragmentInteractionListener || context instanceof OnProblemInteractionListener) {
+            if (context instanceof OnFragmentInteractionListener) {
+                onFragmentInteractionListener = (OnFragmentInteractionListener) context;
+            }
+            if (context instanceof OnProblemInteractionListener) {
+                onProblemInteractionListener = (OnProblemInteractionListener) context;
+            }
+        } else  {
             throw new RuntimeException(context.toString()
-                + " must implement OnListFragmentInteractionListener");
+                + " must implement OnFragmentInteractionListener and OnProblemInteractionListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        onFragmentInteractionListener = null;
+        onProblemInteractionListener = null;
     }
 }
